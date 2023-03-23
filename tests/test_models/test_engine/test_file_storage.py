@@ -2,6 +2,12 @@
 """ Module for testing file storage"""
 import unittest
 from models.base_model import BaseModel
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
+from models.engine.file_storage import FileStorage
 from models import storage
 import os
 
@@ -24,6 +30,34 @@ class test_fileStorage(unittest.TestCase):
         except:
             pass
 
+    def test_delete(self):
+        """Test deleting an object from storage"""
+        # Create a new object and save it to storage
+        obj = BaseModel()
+        storage.new(obj)
+        storage.save()
+
+        # Verify that the object is in storage
+        self.assertIn(obj, storage.all().values())
+
+        # Delete the object from storage
+        storage.delete(obj)
+        storage.save()
+
+        # Verify that the object is no longer in storage
+        self.assertNotIn(obj, storage.all().values())
+
+    def test_delete_none(self):
+        """Test that delete method does nothing when obj is None"""
+        # Save current state of storage
+        before = storage.all()
+
+        # Call delete method with obj=None
+        storage.delete(None)
+
+        # Verify that storage is unchanged
+        self.assertEqual(storage.all(), before)
+
     def test_obj_list_empty(self):
         """ __objects is initially empty """
         self.assertEqual(len(storage.all()), 0)
@@ -40,6 +74,16 @@ class test_fileStorage(unittest.TestCase):
         new = BaseModel()
         temp = storage.all()
         self.assertIsInstance(temp, dict)
+        obj1 = BaseModel()
+        obj3 = Place()
+        storage.new(obj1)
+        storage.save()
+
+        # Retrieve all BaseModel objects from storage
+        base_models = storage.all(BaseModel)
+
+        # Verify that only the BaseModel objects were retrieved
+        self.assertIn(obj1, base_models.values())
 
     def test_base_model_instantiation(self):
         """ File is not created on BaseModel save """
