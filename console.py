@@ -10,6 +10,7 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+import os
 
 
 class HBNBCommand(cmd.Cmd):
@@ -160,12 +161,18 @@ class HBNBCommand(cmd.Cmd):
 
             if key in HBNBCommand.types:
                 value = HBNBCommand.types[key](value)
-
             setattr(new_instance, key, value)
-
-        storage.save()
-        print(new_instance.id)
-        storage.save()
+        if os.environ.get("HBNB_TYPE_STORAGE") == "db":
+            from models.engine.db_storage import DBStorage
+            database = DBStorage()
+            database.reload()
+            database.new(new_instance)
+            print(new_instance.id)
+            database.save()
+        else:
+            storage.new(new_instance)
+            print(new_instance.id)
+            storage.save()
 
     def help_create(self):
         """ Help information for the create method """
