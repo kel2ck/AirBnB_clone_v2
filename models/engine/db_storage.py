@@ -13,6 +13,8 @@ import os
 
 
 classes = {"State": State, "City": City}
+
+
 class DBStorage:
     """Implementation of the database storage"""
     __engine = None
