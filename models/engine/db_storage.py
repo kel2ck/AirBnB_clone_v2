@@ -12,7 +12,7 @@ from models.user import User
 import os
 
 
-classes = {"State": State, "City": City}
+classes = {"State": State, "City": City, "User": User}
 
 
 class DBStorage:
