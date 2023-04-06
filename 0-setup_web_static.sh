@@ -12,7 +12,7 @@ fi
 sudo mkdir -p /data/web_static/releases/test/
 sudo mkdir -p /data/web_static/shared/
 # Create a test HTML file in the required directory
-sudo cat << EOF > /data/web_static/releases/test/index.html
+sudo tee /data/web_static/releases/test/index.html >/dev/null <<EOF
 <html>
   <head>
   </head>
@@ -26,11 +26,15 @@ sudo ln -sfn /data/web_static/releases/test/ /data/web_static/current
 # Make the user and group ubuntu the owner of the file
 sudo chown -R ubuntu:ubuntu /data/
 # Edit the default file to make /hbnb_static point to a directory
-sudo sed -i '10i\' "$(cat <<EOF
+# Create a temporary file containing the configuration block
+cat <<'EOF' > /tmp/temp_block
         location /hbnb_static/ {
             alias /data/web_static/current/;
-    }
+        }
 EOF
-)" /etc/nginx/sites-available/default
+# Insert the contents of the temporary file after the 10th line
+sudo sed -i '10r /tmp/temp_block' /etc/nginx/sites-available/default
+# Remove the temporary file
+rm /tmp/temp_block
 # Restart Nginx
 sudo service nginx restart
