@@ -8,6 +8,7 @@ from fabric.decorators import runs_once
 # Prototype: def do_pack():
 @runs_once
 def do_pack():
+    """The funcion to do the archiving"""
     timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
     archive_name = "web_static_" + timestamp + ".tgz"
     local("mkdir -p versions")
