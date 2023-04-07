@@ -15,10 +15,11 @@ def do_deploy(archive_path):
     try:
         # The script should take the following steps:
         full_name = archive_path.rsplit("/", 1)[-1]
-        no_extension = full_name.rsplit(".", 1)[-1]
+        no_extension = full_name.rsplit(".", 1)[0]
         # Upload the archive to the /tmp/ directory of the web server
         put(archive_path, "/tmp/")
         # Uncompress the archive
+        run("mkdir -p /data/web_static/releases/{}".format(no_extension))
         run("tar -xzf /tmp/{} -C /data/web_static/releases/{}".format(full_name, no_extension))
         # Delete the archive from the web server
         run("rm /tmp/{}".format(full_name))
