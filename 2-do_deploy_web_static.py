@@ -3,13 +3,14 @@
 from datetime import datetime
 from fabric.api import local, run, put, env
 from fabric.decorators import runs_once
+import os
 
 
 env.hosts = ['34.202.159.232', '100.24.236.27']
 def do_deploy(archive_path):
     """Distribute an archive to the remote hosts"""
     # Returns False if the file at the path archive_path doesn’t exist
-    if local("test -e {}".format(archive_path)).return_code != 0:
+    if not os.path.exists(archive_path):
         return False
     try:
         # The script should take the following steps:
