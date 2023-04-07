@@ -7,6 +7,8 @@ import os
 
 
 env.hosts = ['34.202.159.232', '100.24.236.27']
+
+
 def do_deploy(archive_path):
     """Distribute an archive to the remote hosts"""
     # Returns False if the file at the path archive_path doesn’t exist
@@ -20,13 +22,15 @@ def do_deploy(archive_path):
         put(archive_path, "/tmp/")
         # Uncompress the archive
         run("mkdir -p /data/web_static/releases/{}".format(no_extension))
-        run("tar -xzf /tmp/{} -C /data/web_static/releases/{}".format(full_name, no_extension))
+        run("tar -xzf /tmp/{} -C /data/web_static/releases/{}"
+            .format(full_name, no_extension))
         # Delete the archive from the web server
         run("rm /tmp/{}".format(full_name))
         # Delete the symbolic link /data/web_static/current
         run("rm /data/web_static/current")
         # Create a new symbolic link
-        run("ln -s /data/web_static/releases/{} /data/web_static/current".format(no_extension))
+        run("ln -s /data/web_static/releases/{}/web_static /data/web_static/current"
+            .format(no_extension))
         return True
     except Exception:
         return False
