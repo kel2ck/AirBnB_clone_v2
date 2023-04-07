@@ -29,8 +29,8 @@ def do_deploy(archive_path):
         # Delete the symbolic link /data/web_static/current
         run("rm /data/web_static/current")
         # Create a new symbolic link
-        run("ln -s /data/web_static/releases/{}/web_static /data/web_static/current"
-            .format(no_extension))
+        run("ln -s /data/web_static/releases/{}/web_static \
+                /data/web_static/current".format(no_extension))
         return True
     except Exception:
         return False
