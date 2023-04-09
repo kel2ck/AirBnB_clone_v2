@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 # Set up web servers for the deployment of web static
-# Install Nginx if it's not installed
-if ! [ -x "$(command -v nginx)" ]; then
-    echo "Nginx not installed. Installing..."
-    sudo apt-get update
-    sudo apt-get -y install nginx
-else
-    echo "Nginx already installed"
-fi
+
+sudo apt-get update
+sudo apt-get -y install nginx
+
 # Create required directories
 sudo mkdir -p /data/web_static/releases/test/
 sudo mkdir -p /data/web_static/shared/
