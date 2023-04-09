@@ -1,49 +1,49 @@
 #!/usr/bin/python3
-"""A fabric script that distributes an archive to web servers"""
-from datetime import datetime
-from fabric.api import local, run, put, env
-from fabric.decorators import runs_once
-import os
+""""Fabric script that distributes an archive to web servers"""
 
+import os.path
+from fabric.api import *
+from fabric.operations import run, put, sudo
 
 env.hosts = ['52.207.208.87', '54.166.141.169']
 env.user = 'ubuntu'
-
-
-@runs_once
-def do_pack():
-    """The funcion to do the archiving"""
-    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-    archive_name = "web_static_" + timestamp + ".tgz"
-    local("mkdir -p versions")
-    result = local("tar czf versions/{} web_static".format(archive_name))
-    if result.failed:
-        return None
-    return "versions/{}".format(archive_name)
+env.key_filename = '~/.ssh/alx_server'
 
 
 def do_deploy(archive_path):
-    """Distribute an archive to the remote hosts"""
-    # Returns False if the file at the path archive_path doesn’t exist
-    if not os.path.exists(archive_path):
+    """ distribute archive to a web server"""
+    if (os.path.isfile(archive_path) is False):
         return False
+
     try:
-        # The script should take the following steps:
-        full_name = archive_path.rsplit("/", 1)[-1]
-        no_extension = full_name.rsplit(".", 1)[0]
-        # Upload the archive to the /tmp/ directory of the web server
+        new_comp = archive_path.split("/")[-1]
+        new_folder = ("/data/web_static/releases/" + new_comp.split(".")[0])
+
+        # push archive to the /tmp/ directory of the web server
         put(archive_path, "/tmp/")
-        # Uncompress the archive
-        run("mkdir -p /data/web_static/releases/{}".format(no_extension))
-        run("tar -xzf /tmp/{} -C /data/web_static/releases/{}"
-            .format(full_name, no_extension))
-        # Delete the archive from the web server
-        run("rm -r /tmp/{}".format(full_name))
-        # Delete the symbolic link /data/web_static/current
-        run("rm -rf /data/web_static/current")
-        # Create a new symbolic link
-        run("ln -s /data/web_static/releases/{}/web_static \
-                /data/web_static/current".format(no_extension))
+
+        # Uncompress the archive to the folder /data/web_static/releases/<archive filename
+        # without extension> on the web server
+        run("sudo mkdir -p {}".format(new_folder))
+        run("sudo tar -xzf /tmp/{} -C {}".
+            format(new_comp, new_folder))
+
+        # delete the archive created from the web server
+        run("sudo rm /tmp/{}".format(new_comp))
+
+	# move contents into host web_static
+        run("sudo mv {}/web_static/* {}/".format(new_folder, new_folder))
+
+        # remove extra  web_static dir
+        run("sudo rm -rf {}/web_static".format(new_folder))
+
+        # Delete the symbolic link /data/web_static/current from the web server
+        run('sudo rm -rf /data/web_static/current')
+
+        # Create a new the symbolic link /data/web_static/current on the web server,
+        # linked to the new version of your code (/data/web_static/releases/<archive filename without extension>)
+        run("sudo ln -s {} /data/web_static/current".format(new_folder))
+
         return True
-    except Exception:
+    except:
         return False
