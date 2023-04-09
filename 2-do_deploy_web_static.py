@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""A  fabric script that distributes an archive to web servers"""
+"""A fabric script that distributes an archive to web servers"""
 from datetime import datetime
 from fabric.api import local, run, put, env
 from fabric.decorators import runs_once
@@ -37,9 +37,9 @@ def do_deploy(archive_path):
         run("tar -xzf /tmp/{} -C /data/web_static/releases/{}"
             .format(full_name, no_extension))
         # Delete the archive from the web server
-        run("rm /tmp/{}".format(full_name))
+        run("rm -rf /tmp/{}".format(full_name))
         # Delete the symbolic link /data/web_static/current
-        run("rm /data/web_static/current")
+        run("rm -rf /data/web_static/current")
         # Create a new symbolic link
         run("ln -s /data/web_static/releases/{}/web_static \
                 /data/web_static/current".format(no_extension))
