@@ -9,7 +9,6 @@ import os
 
 env.hosts = ['52.207.208.87', '54.166.141.169']
 env.user = 'ubuntu'
-env.key_filename = '~/.ssh/alx_server'
 
 
 @runs_once
@@ -48,4 +47,4 @@ def do_deploy(archive_path):
                 /data/web_static/current".format(no_extension))
         return True
     except Exception:
-
+        return False
