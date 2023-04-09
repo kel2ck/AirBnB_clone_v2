@@ -7,6 +7,7 @@ import os
 
 
 env.hosts = ['52.207.208.87', '54.166.141.169']
+env.user = 'ubuntu'
 
 
 @runs_once
@@ -37,7 +38,7 @@ def do_deploy(archive_path):
         run("tar -xzf /tmp/{} -C /data/web_static/releases/{}"
             .format(full_name, no_extension))
         # Delete the archive from the web server
-        run("rm -rf /tmp/{}".format(full_name))
+        run("rm -r /tmp/{}".format(full_name))
         # Delete the symbolic link /data/web_static/current
         run("rm -rf /data/web_static/current")
         # Create a new symbolic link
