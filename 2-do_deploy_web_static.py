@@ -1,12 +1,12 @@
 #!/usr/bin/python3
-"""A fab file to archive a folder"""
+"""A  fabric script that distributes an archive to web servers"""
 from datetime import datetime
 from fabric.api import local, run, put, env
 from fabric.decorators import runs_once
 import os
 
 
-env.hosts = ['34.202.159.232', '100.24.236.27']
+env.hosts = ['52.207.208.87', '54.166.141.169']
 
 
 @runs_once
