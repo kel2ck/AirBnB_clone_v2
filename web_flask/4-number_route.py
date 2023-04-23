@@ -3,12 +3,14 @@
 - The application must listens on 0.0.0.0, port 5000.
 Routes:
     /: display “Hello HBNB!”
-    /hbnb: display "HBNB".
-    /c/<text>: display “C ” followed by the value of the text variable
-    /python/(<text>): display “Python ”, followed by 
-        the value of the text variable
-        The default value of text is “is cool”
-    /number/<n>: display “n is a number” only if n is an integer.
+        /hbnb: display “HBNB”
+        /c/<text>: display “C ”, followed by the value of the text variable
+         (replace underscore _ symbols with a space )
+        /python/(<text>): display “Python ”, followed by the value of the
+            text variable
+            (replace underscore _ symbols with a space )
+            The default value of text is “is cool”
+        /number/<n>: display “n is a number” only if n is an integer
 - strict_slashes=False is mandatory in route definition
 """
 from flask import Flask
