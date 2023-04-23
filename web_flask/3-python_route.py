@@ -30,11 +30,10 @@ def c(text):
     text = text.replace("_", " ")
     return "C {}".format(text)
 
-@app.route("/python", strict_slashes=False)
-@app.route("/python/<text>", strict_slashes=False)
-def python(text="is cool"):
-    text = text.replace("_", " ")
-    return "Python {}".format(text)
+@app.route('/python/', strict_slashes=False)
+@app.route('/python/<text_py>', strict_slashes=False)
+def python(text_py='is cool'):
+    return('Python {}'.format(text_py.replace("_", " ")))
 
 
 if __name__ == '__main__':
