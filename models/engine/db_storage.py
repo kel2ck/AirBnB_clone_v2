@@ -73,5 +73,5 @@ class DBStorage:
                                                      expire_on_commit=False))
 
     def close(self):
-        """closes the working SQLAlchemy session"""
-        self.__session.close()
+        """remove the current working SQLAlchemy session"""
+        self.__session.remove()
