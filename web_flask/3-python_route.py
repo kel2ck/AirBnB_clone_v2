@@ -5,8 +5,9 @@ Routes:
     /: display “Hello HBNB!”
     /hbnb: display "HBNB".
     /c/<text>: display “C ” followed by the value of the text variable.
-    /python/(<text>): display “Python ”, followed by the value of the text.
-- strict_slashes=False is mandatory in route definition
+    /python/(<text>): display “Python ”, followed by the value of the text
+    - The default value of text is “is cool”
+- strict_slashes=False is mandatory in route definition.
 """
 from flask import Flask
 
