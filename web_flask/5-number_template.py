@@ -15,7 +15,7 @@ Routes:
             H1 tag: “Number: n” inside the tag BODY
 - strict_slashes=False is mandatory in route definition
 """
-from flask import Flask, render_templates
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
