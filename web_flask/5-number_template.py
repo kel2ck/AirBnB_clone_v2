@@ -49,7 +49,7 @@ def number_route(n):
 
 
 @app.route('/number_template/<int:n>', strict_slashes=False)
-def number_html(n):
+def html_number(n):
     return(render_template('5-number.html', n=n))
 
 
