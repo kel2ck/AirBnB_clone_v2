@@ -35,23 +35,18 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """
-        Prints all the objects of a class, if the class is provided.
-        If not, prints all objects
-        """
-        object_dict = {}
+        """ query and return all """
+        objects = {}
+        if type(cls) == str:
+            cls = classes.get(cls, None)
         if cls:
-            objects = self.__session.query(cls).all()
-            for object in objects:
-                key = object.__class__.__name__ + '.' + object.id
-                object_dicts[key] = object
+            for obj in self.__session.query(cls):
+                objects[obj.__class__.__name__ + '.' + obj.id] = obj
         else:
-            for item in classes.values():
-                objects = self.__session.query(item).all()
-                for object in objects:
-                    key = object.__class__.__name__ + '.' + object.id
-                    object_dict[key] = object
-        return object_dict
+            for cls in classes.values():
+                for obj in self.__session.query(cls):
+                    objects[obj.__class__.__name__ + '.' + obj.id] = obj
+        return objects
 
     def new(self, obj):
         """adds the object to the session"""
@@ -63,7 +58,7 @@ class DBStorage:
 
     def delete(self, obj=None):
         """deletes the object from the session"""
-        if obj is not None:
+        if obj:
             self.__session.delete(obj)
 
     def reload(self):
