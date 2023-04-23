@@ -10,7 +10,6 @@ from flask import Flask
 
 app = Flask(__name__)
 
-"""display 'Hello HBNB!' and 'HBNB'"""
 
 @app.route('/', strict_slashes=False)
 def hello_hbnb():
