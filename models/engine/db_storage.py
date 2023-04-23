@@ -9,7 +9,7 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
-import os
+from os import getenv
 
 
 classes = {"State": State, "City": City, "User": User,
@@ -22,16 +22,16 @@ class DBStorage:
     __session = None
 
     def __init__(self):
-        user = os.environ.get("HBNB_MYSQL_USER")
-        password = os.environ.get("HBNB_MYSQL_PWD")
-        host = os.environ.get("HBNB_MYSQL_HOST")
-        database = os.environ.get("HBNB_MYSQL_DB")
-        environment = os.environ.get("HBNB_ENV")
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@localhost/{}'
-                                      .format(user, password, database),
-                                      pool_pre_ping=True)
+        user = getenv("HBNB_MYSQL_USER")
+        password = getenv("HBNB_MYSQL_PWD")
+        host = getenv("HBNB_MYSQL_HOST")
+        database = getenv("HBNB_MYSQL_DB")
+        environment = getenv("HBNB_ENV")
+
+        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
+                                      .format(user, password, host, database,
+                                              pool_pre_ping=True))
         if environment == "test":
-            from models.base_model import Base
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
