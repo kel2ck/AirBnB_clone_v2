@@ -1,29 +1,32 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
-from models.base_model import BaseModel, Base
-from models import storage_type
-from sqlalchemy import Column, String, Integer, ForeignKey
+import os
+from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-import shlex
+
+from models.base_model import BaseModel, Base
+from models.city import City
 
 
 class State(BaseModel, Base):
     """ State class """
-    __tablename__ = "states"
-    name = Column(String(128), nullable=False)
-    cities = relationship("City", cascade="all, delete, delete-orphan",
-                          backref="state")
-
-    @property def cities(self):
-        values_city = models.storage.all()
-        list_city = []
-        result = []
-        for key in values_city:
-            city = key.replace('.', ' ')
-            city = shlex.split(city)
-            if (city[0] == 'City'):
-                list_city.append(values_city[key])
-        for elem in list_city:
-            if (elem.state_id == self.id):
-                result.append(elem)
-        return (result)
+    __tablename__ = 'states'
+    name = Column(
+        String(128), nullable=False
+    ) if os.getenv('HBNB_TYPE_STORAGE') == 'db' else ''
+    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+        cities = relationship(
+            'City',
+            cascade='all, delete, delete-orphan',
+            backref='state'
+        )
+    else:
+        @property
+        def cities(self):
+            """Returns the cities in this State"""
+            from models import storage
+            cities_in_state = []
+            for value in storage.all(City).values():
+                if value.state_id == self.id:
+                    cities_in_state.append(value)
+            return cities_in_state
